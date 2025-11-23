@@ -101,21 +101,21 @@ class CertificateGenerator:
         name_text = student['name']
         name_bbox = draw.textbbox((0, 0), name_text, font=name_font)
         name_width = name_bbox[2] - name_bbox[0]
-        name_x = (width - name_width) // 2
+        name_x = (width - name_width) // 2 - name_bbox[0]
         name_y = int(height * 0.45)
 
         # Department position
         dept_text = f"Department: {student['department']}"
         dept_bbox = draw.textbbox((0, 0), dept_text, font=detail_font)
         dept_width = dept_bbox[2] - dept_bbox[0]
-        dept_x = (width - dept_width) // 2
+        dept_x = (width - dept_width) // 2 - dept_bbox[0]
         dept_y = int(height * 0.60)
 
         # Class position
         class_text = f"Class: {student['class']}"
         class_bbox = draw.textbbox((0, 0), class_text, font=detail_font)
         class_width = class_bbox[2] - class_bbox[0]
-        class_x = (width - class_width) // 2
+        class_x = (width - class_width) // 2 - class_bbox[0]
         class_y = int(height * 0.68)
 
         # Draw text on certificate
