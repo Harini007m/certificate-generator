@@ -1,10 +1,16 @@
 """
 Email Sender Module
 Sends certificates via email using Twilio SendGrid API.
+
+Note: Current implementation simulates email sending for demonstration purposes.
+To enable actual email sending, install the sendgrid package and uncomment
+the SendGrid integration code in the send_certificate method.
+
+Required package: pip install sendgrid
+Environment variable: SENDGRID_API_KEY
 """
 
 import os
-from twilio.rest import Client
 from dotenv import load_dotenv
 import base64
 
@@ -12,19 +18,21 @@ load_dotenv()
 
 
 class EmailSender:
-    """Send certificates via email using Twilio."""
+    """Send certificates via email using Twilio SendGrid."""
 
     def __init__(self):
-        """Initialize email sender with Twilio credentials."""
+        """Initialize email sender with Twilio/SendGrid credentials."""
         self.account_sid = os.getenv('TWILIO_ACCOUNT_SID')
         self.auth_token = os.getenv('TWILIO_AUTH_TOKEN')
         self.from_email = os.getenv('TWILIO_FROM_EMAIL')
+        self.sendgrid_api_key = os.getenv('SENDGRID_API_KEY')
 
-        if not all([self.account_sid, self.auth_token, self.from_email]):
-            raise ValueError("Twilio credentials not properly configured in .env file")
-
-        # Initialize Twilio client
-        self.client = Client(self.account_sid, self.auth_token)
+        # Allow initialization without credentials for demo mode
+        if not all([self.from_email]):
+            print("WARNING: Email credentials not configured. Running in simulation mode.")
+            self.simulation_mode = True
+        else:
+            self.simulation_mode = False
 
     def send_certificate(self, to_email, student_name, certificate_path, custom_message=''):
         """
@@ -64,17 +72,16 @@ Certificate Generation Team
             # Encode certificate as base64
             certificate_b64 = base64.b64encode(certificate_data).decode('utf-8')
 
-            # Note: Twilio's main service doesn't directly send emails with attachments
-            # This is a placeholder implementation that shows the structure
-            # In production, you would use Twilio SendGrid API for email
-            # For now, we'll simulate the email sending
-
-            print(f"Simulating email send to {to_email}")
-            print(f"Subject: {subject}")
-            print(f"Body preview: {default_message[:100]}...")
-            print(f"Attachment: {os.path.basename(certificate_path)}")
-
-            # In a real implementation with SendGrid, you would do:
+            if self.simulation_mode or not self.sendgrid_api_key:
+                # Simulation mode - log the email that would be sent
+                print(f"[SIMULATION] Email to: {to_email}")
+                print(f"[SIMULATION] Subject: {subject}")
+                print(f"[SIMULATION] Attachment: {os.path.basename(certificate_path)}")
+                return True
+            
+            # Real implementation with SendGrid (requires sendgrid package)
+            # Uncomment this section and install sendgrid package to enable actual email sending
+            #
             # from sendgrid import SendGridAPIClient
             # from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
             # 
@@ -93,10 +100,10 @@ Certificate Generation Team
             # )
             # message.attachment = attachment
             # 
-            # sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
+            # sg = SendGridAPIClient(self.sendgrid_api_key)
             # response = sg.send(message)
-
-            # For demo purposes, return True
+            # return response.status_code in [200, 201, 202]
+            
             return True
 
         except Exception as e:

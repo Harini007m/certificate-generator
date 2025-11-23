@@ -29,7 +29,7 @@ class FileParser:
             return self._parse_excel(file_path)
         elif file_extension == '.csv':
             return self._parse_csv(file_path)
-        elif file_extension in ['.doc', '.docx']:
+        elif file_extension == '.docx':
             return self._parse_docx(file_path)
         else:
             raise ValueError(f"Unsupported file format: {file_extension}")
@@ -51,7 +51,11 @@ class FileParser:
             raise Exception(f"Error parsing CSV file: {str(e)}")
 
     def _parse_docx(self, file_path):
-        """Parse DOCX file - assumes table format."""
+        """Parse DOCX file - assumes table format. Note: .doc files are not supported, only .docx."""
+        file_extension = os.path.splitext(file_path)[1].lower()
+        if file_extension == '.doc':
+            raise ValueError("Legacy .doc files are not supported. Please convert to .docx format.")
+        
         try:
             doc = Document(file_path)
             students = []

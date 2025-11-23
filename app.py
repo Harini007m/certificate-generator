@@ -17,7 +17,12 @@ from utils.email_sender import EmailSender
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'default_secret_key_change_me')
+secret_key = os.getenv('FLASK_SECRET_KEY')
+if not secret_key:
+    import secrets
+    secret_key = secrets.token_hex(32)
+    print("WARNING: FLASK_SECRET_KEY not set in environment. Using generated key for this session.")
+app.config['SECRET_KEY'] = secret_key
 app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
 app.config['CERTIFICATES_FOLDER'] = os.getenv('CERTIFICATES_FOLDER', 'generated_certificates')
 app.config['MAX_CONTENT_LENGTH'] = int(os.getenv('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))  # 16MB
@@ -28,7 +33,7 @@ os.makedirs(app.config['CERTIFICATES_FOLDER'], exist_ok=True)
 
 # Allowed file extensions
 ALLOWED_TEMPLATE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
-ALLOWED_DATA_EXTENSIONS = {'xlsx', 'xls', 'csv', 'doc', 'docx'}
+ALLOWED_DATA_EXTENSIONS = {'xlsx', 'xls', 'csv', 'docx'}
 
 
 def allowed_file(filename, allowed_extensions):
@@ -61,7 +66,7 @@ def upload_files():
             return jsonify({'error': 'Invalid template file format. Allowed: PNG, JPG, JPEG, PDF'}), 400
 
         if not allowed_file(data_file.filename, ALLOWED_DATA_EXTENSIONS):
-            return jsonify({'error': 'Invalid data file format. Allowed: XLSX, XLS, CSV, DOC, DOCX'}), 400
+            return jsonify({'error': 'Invalid data file format. Allowed: XLSX, XLS, CSV, DOCX'}), 400
 
         # Save files
         template_filename = secure_filename(template_file.filename)

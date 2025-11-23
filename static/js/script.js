@@ -184,12 +184,11 @@ function displayEmailResults(results) {
         else if (result.status === 'no_email') noEmailCount++;
     });
     
-    let message = `Email Results:\n`;
-    message += `✓ Sent: ${successCount}\n`;
-    if (failCount > 0) message += `✗ Failed: ${failCount}\n`;
-    if (noEmailCount > 0) message += `⚠ No email: ${noEmailCount}`;
+    let message = `Email Results: ✓ Sent: ${successCount}`;
+    if (failCount > 0) message += `, ✗ Failed: ${failCount}`;
+    if (noEmailCount > 0) message += `, ⚠ No email: ${noEmailCount}`;
     
-    alert(message);
+    showMessage(message, successCount > 0 ? 'success' : 'info');
 }
 
 // Show loading spinner

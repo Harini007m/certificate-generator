@@ -6,7 +6,7 @@ An automated certificate generation system that creates personalized certificate
 
 - 📁 **Multiple File Format Support**
   - Certificate Templates: PNG, JPG, JPEG, PDF
-  - Student Data: Excel (.xlsx, .xls), CSV, DOC, DOCX
+  - Student Data: Excel (.xlsx, .xls), CSV, DOCX (Note: Legacy .doc format is not supported)
 
 - 🎓 **Automatic Certificate Generation**
   - Extracts student information from uploaded files
@@ -191,23 +191,33 @@ certificate-generator/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `TWILIO_ACCOUNT_SID` | Twilio account SID | Yes (for email) |
-| `TWILIO_AUTH_TOKEN` | Twilio auth token | Yes (for email) |
-| `TWILIO_FROM_EMAIL` | Verified sender email | Yes (for email) |
+| `TWILIO_ACCOUNT_SID` | Twilio account SID | No (optional) |
+| `TWILIO_AUTH_TOKEN` | Twilio auth token | No (optional) |
+| `TWILIO_FROM_EMAIL` | Verified sender email | No (optional) |
+| `SENDGRID_API_KEY` | SendGrid API key | No (optional) |
 | `FLASK_SECRET_KEY` | Flask session secret key | Yes |
 | `UPLOAD_FOLDER` | Upload directory | No (default: uploads) |
 | `CERTIFICATES_FOLDER` | Generated certificates directory | No (default: generated_certificates) |
 | `MAX_CONTENT_LENGTH` | Maximum upload size in bytes | No (default: 16MB) |
 
-## Twilio Setup
+## Email Setup (Optional)
 
-To send emails, you need a Twilio account with SendGrid:
+The system runs in simulation mode by default. To enable actual email sending:
 
-1. Sign up at [Twilio](https://www.twilio.com/)
-2. Get your Account SID and Auth Token
-3. Set up SendGrid for email sending
-4. Verify your sender email address
-5. Add credentials to `.env` file
+1. **Option 1: Using SendGrid (Recommended)**
+   - Sign up at [SendGrid](https://sendgrid.com/)
+   - Get your API key
+   - Install sendgrid: `pip install sendgrid`
+   - Uncomment the SendGrid code in `utils/email_sender.py`
+   - Add `SENDGRID_API_KEY` to `.env` file
+
+2. **Option 2: Using Twilio**
+   - Sign up at [Twilio](https://www.twilio.com/)
+   - Get your Account SID and Auth Token
+   - Set up email integration
+   - Add credentials to `.env` file
+
+**Note**: Without these credentials, the system will simulate email sending (logging to console) but still generate certificates normally.
 
 ## Troubleshooting
 

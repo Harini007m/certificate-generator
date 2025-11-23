@@ -72,10 +72,26 @@ class CertificateGenerator:
 
         # Try to load a font, fallback to default if not available
         try:
-            # Try different font sizes and styles
-            name_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 60)
-            detail_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 40)
-        except:
+            # Try different font paths for cross-platform compatibility
+            font_paths = [
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",  # Linux
+                "/System/Library/Fonts/Helvetica.ttc",  # macOS
+                "C:\\Windows\\Fonts\\arial.ttf",  # Windows
+            ]
+            
+            name_font = None
+            for font_path in font_paths:
+                try:
+                    name_font = ImageFont.truetype(font_path, 60)
+                    detail_font = ImageFont.truetype(font_path, 40)
+                    break
+                except (OSError, IOError):
+                    continue
+            
+            if name_font is None:
+                raise OSError("No suitable font found")
+                
+        except (OSError, IOError):
             # Fallback to default font
             name_font = ImageFont.load_default()
             detail_font = ImageFont.load_default()
