@@ -196,6 +196,7 @@ certificate-generator/
 | `TWILIO_FROM_EMAIL` | Verified sender email | No (optional) |
 | `SENDGRID_API_KEY` | SendGrid API key | No (optional) |
 | `FLASK_SECRET_KEY` | Flask session secret key | Yes |
+| `FLASK_DEBUG` | Enable Flask debug mode (use False in production) | No (default: False) |
 | `UPLOAD_FOLDER` | Upload directory | No (default: uploads) |
 | `CERTIFICATES_FOLDER` | Generated certificates directory | No (default: generated_certificates) |
 | `MAX_CONTENT_LENGTH` | Maximum upload size in bytes | No (default: 16MB) |
