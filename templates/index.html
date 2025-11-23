@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Certificate Generator</h1>
+            <p>Generate personalized certificates for students</p>
+        </header>
+
+        <!-- Step 1: Upload Files -->
+        <section class="card" id="upload-section">
+            <h2>Step 1: Upload Files</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="template">Certificate Template (PNG, JPG, PDF):</label>
+                    <input type="file" id="template" name="template" accept=".png,.jpg,.jpeg,.pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="student_data">Student Data (Excel, CSV, DOC, DOCX):</label>
+                    <input type="file" id="student_data" name="student_data" accept=".xlsx,.xls,.csv,.doc,.docx" required>
+                    <small>File should contain columns: Name, Department, Class, Email</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload Files</button>
+            </form>
+        </section>
+
+        <!-- Step 2: Review Students -->
+        <section class="card hidden" id="review-section">
+            <h2>Step 2: Review Student Data</h2>
+            <div id="student-list"></div>
+            <button id="generate-btn" class="btn btn-primary">Generate Certificates</button>
+        </section>
+
+        <!-- Step 3: Preview and Send -->
+        <section class="card hidden" id="preview-section">
+            <h2>Step 3: Preview and Send Certificates</h2>
+            <div id="certificate-list"></div>
+            <div class="email-section">
+                <h3>Send Certificates via Email</h3>
+                <div class="form-group">
+                    <label for="email-message">Custom Message (optional):</label>
+                    <textarea id="email-message" rows="4" placeholder="Add a custom message to include in the email..."></textarea>
+                </div>
+                <button id="send-email-btn" class="btn btn-success">Send All Certificates</button>
+            </div>
+        </section>
+
+        <!-- Messages -->
+        <div id="message-container"></div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
